@@ -1,0 +1,201 @@
+Network Types
+SOHO Networks = small office/home office Networks
+
+
+Data Transmission
+Volunteered data: created and explicitly shared data such as network profiles; might include video files, pictures, text or audio files
+Observed data: captured by recording actions; such as location data
+Inferred data: Analysis of volunteered and observed data
+
+3 common network signal transmission methods: electrical, optical and wireless
+
+
+Bandwidth and Throughput
+Bandwidth is the capacity of an environment to carry data. Common bandwidht measurements: thousands of bits per second (Kbps), millions of bits per second (Mbps), billion of bits per second (Gbps)
+
+Throughput contains latency (refers to delays and amont of time) and does not usually match the specified bandwidth
+
+
+Clients and Servers
+Host: the device has a network connection
+Server: the host that provides services
+Client: the host that uses services
+Peer-to-peer (P2P) Network contains hosts can behave like server and client at the same time, there are P2P applications too
+P2P network is cheaper and less complicated but has less secutiry and it is not scalable also
+
+
+Network Components
+End Devices: Consumer devices like laptop, smartphone etc.
+Intermediate Devices: Administration devices like switch, router, wireless access point etc.
+Network Media: Wireless media, LAN media, WAN media
+
+
+ISP Connectivity Options
+ISP (Internet Service Provider) is like a link between home and internet. ISP can be local cable provider, a landline telephone service provider, the cellular network or an independent provider who leases bandwidth or infstructure of another company. ISPs are connected in a hierarchical manner to traffic goes with the shortest way. Interconnection of ISPs are with fiber-optic cables. A home user needs wireless integrated router that a switch to cable connection and wireless access point to wireless connection. The router also provides client IP addressing information and security for inside hosts. The two most common methods are cable and DSL. Other options include cellular, satellite, and dial-up telephone.
+
+
+Wireless Networks
+Wi-fi, GPS (provided by satellites around the world), Bluetooth (short distances, needs less power), NFC (provides exchange data from devices, and devices should have very less distances around them (usually few cantimeters))
+
+
+Wireless Standards
+Wireless routers using the 802.11 standards have multiple settings that have to be configured.
+Network mode: Choosing a standard - 802.11b, 802.11g, 802.11n or Mixed Mode.
+Network Name: SSID - identifying the WLAN
+Standard Channel: Specifies the channel over which communication will occur. By default, this is set to Auto to allow the access point (AP) to determine the optimum channel to use.
+SSID Broadcast: Determines if the SSID will be broadcast to all devices within range. By default, set to Enabled.
+If all wireless devices connect with the same 802.11 standard, maximum speeds can be obtained for that standard. If the access point is configured to accept only one 802.11 standard, devices that do not use that standard cannot connect to the access point. A mixed mode wireless network environment can include devices that use any of the existing Wi-Fi standards.
+
+Set up a Home Router
+After the computer is connected to the network router and the link lights on the NIC indicate a working connection, the computer needs an IP address. Most network routers are set up so that the computer receives an IP address automatically from a local DHCP server automatically configured on the wireless router.
+It is not a good practice to include the device model or brand name as part of the SSID since internet searches can expose security weaknesses.
+The decision regarding who can access your home network should be determined by how you plan to use the network. Many routers support MAC address filtering. This enables you to specifically identify who is allowed on the wireless network. This makes the wireless network more secure, but it also less flexible when connecting new devices. On some wireless routers, it is possible to set up guest access. This is a special SSID coverage area that allows open access but restricts that access to using the internet only.
+
+
+Communication Protocol
+Message format, message size, timing, encoding, encapsulation(addressing informations about source and destination hosts, like header), message pattern(like request/response)
+
+Network Communication Models
+There are protocol models (like TCP/IP) and reference models (like OSI), TCP/IP protocol model suits OSI reference model.
+TCP/IP Protocol Model
+    Application - Represents data to the user, plus encoding and dialog control
+    Transport -Supports communication between various devices across diverse networks
+    Internet - Determines the best path through the network
+    Network Access - The hardware devices and media that make up the network.
+
+OSI Reference Model
+    7 – Application - The application layer contains protocols used for process-to-process communications.
+    6 – Presentation - The presentation layer provides for common representation of the data transferred between application layer services.
+    5 – Session - The session layer provides services to the presentation layer to organize its dialogue and to manage data exchange.
+    4 – Transport - The transport layer defines services to segment, transfer, and reassemble the data for individual communications between the end devices.
+    3 – Network - The network layer provides services to exchange the individual pieces of data over the network between identified end devices.
+    2 - Data Link - The data link layer protocols describe methods for exchanging data frames between devices over a common media
+    1 – Physical - The physical layer protocols describe the mechanical, electrical, functional, and procedural means to activate, maintain, and de-activate physical connections for a bit transmission to and from a network device. 
+
+
+Encapsulation and the Ethernet Frame
+The process of placing one message format inside another message format is called encapsulation. Just as a letter is encapsulated in an envelope for delivery, so computer messages are encapsulated.
+The format for Ethernet frames specifies the location of the destination and source MAC addresses, and additional information including preamble for sequencing and timing, start of frame delimiter, length and type of frame, and frame check sequence to detect transmission errors.
+
+The Access Layer
+The access layer provides the first line of networking devices that connect hosts to the wired Ethernet network. Because excessive retransmissions can clog up the network and slow down network traffic, hubs are now considered obsolete and have been replaced by Ethernet switches that used at layer 2.
+When a host sends message to another host on same swtiched network, switch checks its own MAC Address Table if source MAC Address is in it or not, if not; then records the MAC Address that correspond to the host on MAC Address Table, then switch checks if destination MAC Address in its own MAC Address Table and if in, then delivers it to the destination host and if not, sends the destination MAC Address of all hosts to learn it like how network hubs do (there is no record to MAC Address Table here).
+
+The Internet Protocol
+The logical 32-bit IP address (4 octet), subnet, network portion and host portion
+
+IPv4 and Segmentation
+Network Address and Prefix		RFC 1918 Private Address Range
+---------------------------		-------------------------------
+10.0.0.0/8				10.0.0.0 - 10.255.255.255
+172.16.0.0/12				172.16.0.0 - 172.31.255.255
+192.168.0.0/16				192.168.0.0 - 192.168.255.255
+
+Routing to the Internet
+ISP translates private IPv4 address to public IPv4 address using NAT(Network Address Translation)
+
+Legacy Classful Addressing
+In 1981, IPv4 addresses were assigned using classful addressing as defined in RFC 790 (https://tools.ietf.org/html/rfc790), Assigned Numbers. Customers were allocated a network address based on one of three classes, A, B, or C. The RFC divided the unicast ranges into specific classes as follows:
+    Class A (0.0.0.0/8 to 127.0.0.0/8) - Designed to support extremely large networks with more than 16 million host addresses. Class A used a fixed /8 prefix with the first octet to indicate the network address and the remaining three octets for host addresses (more than 16 million host addresses per network).
+    Class B (128.0.0.0 /16 - 191.255.0.0 /16) - Designed to support the needs of moderate to large size networks with up to approximately 65,000 host addresses. Class B used a fixed /16 prefix with the two high-order octets to indicate the network address and the remaining two octets for host addresses (more than 65,000 host addresses per network).
+    Class C (192.0.0.0 /24 - 223.255.255.0 /24) - Designed to support small networks with a maximum of 254 hosts. Class C used a fixed /24 prefix with the first three octets to indicate the network and the remaining octet for the host addresses (only 254 host addresses per network).
+Note: There is also a Class D multicast block consisting of 224.0.0.0 to 239.0.0.0 and a Class E experimental address block consisting of 240.0.0.0 - 255.0.0.0.
+
+Class D & E
+12.5% of IPv4 networks
+Class A
+50%
+Class C
+12.5%
+Class B
+25%
+Class A
+Total Networks: 128
+Total Hosts/Net: 16,777,214
+Class B
+Total Networks: 16,384
+Total Hosts/Net: 65,534
+Class C
+Total Networks: 2,097,152
+Total Hosts/Net: 254
+In the mid-1990s, with the introduction of the World Wide Web (WWW), classful addressing was deprecated to more efficiently allocate the limited IPv4 address space. Classful address allocation was replaced with classless addressing, which is used today. Classless addressing ignores the rules of classes (A, B, C). Public IPv4 network addresses (network addresses and subnet masks) are allocated based on the number of addresses that can be justified.
+
+Assignment of IP Addresses
+Both IPv4 and IPv6 addresses are managed by the Internet Assigned Numbers Authority (IANA). The IANA manages and allocates blocks of IP addresses to the Regional Internet Registries (RIRs).
+    AfriNIC (African Network Information Centre) - Africa Region
+    APNIC (Asia Pacific Network Information Centre) - Asia/Pacific Region
+    ARIN (American Registry for Internet Numbers) - North America Region
+    LACNIC (Regional Latin-American and Caribbean IP Address Registry) - Latin America and some Caribbean Islands
+    RIPE NCC (Réseaux IP Européens Network Coordination Centre) - Europe, the Middle East, and Central Asia
+
+Network Segmentation
+The solution is to reduce the size of the network to create smaller broadcast domains in a process called subnetting. These smaller network spaces are called subnets.
+In the figure, the 400 users in LAN 1 with network address 172.16.0.0 /16 have been divided into two subnets of 200 users each: 172.16.0.0 /24 and 172.16.1.0 /24. Broadcasts are only propagated within the smaller broadcast domains. Therefore, a broadcast in LAN 1 would not propagate to LAN 2.
+
+
+IPv6 Addressing
+IPv6 addresses are 128 bits in length and written as a string of hexadecimal values. Every four bits is represented by a single hexadecimal digit; for a total of 32 hexadecimal values. IPv6 addresses are not case-sensitive and can be written in either lowercase or uppercase. In IPv6, a hextet that refers to a segment of 16 bits, or four hexadecimal values. Each “x” is a single hextet, which is 16 bits or four hexadecimal digits. Preferred format means that you write IPv6 address using all 32 hexadecimal digits. Here is one example - fe80:0000:0000:0000:0123:4567:89ab:cdef.
+
+There are two rules that help to reduce the number of digits needed to represent an IPv6 address.
+
+Rule 1 – Omit Leading Zeros. You can only omit leading zeros, not trailing zeros.
+
+    01ab can be represented as 1ab
+    09f0 can be represented as 9f0
+    0a00 can be represented as a00
+    00ab can be represented as ab
+
+Rule 2 – Double Colon. A double colon (::) can replace any single, contiguous string of one or more 16-bit hextets consisting of all zeros. For example, 2001:db8:cafe:1:0:0:0:1 (leading 0s omitted) could be represented as 2001:db8:cafe:1::1. The double colon (::) is used in place of the three all-0 hextets (0:0:0). The double colon (::) can only be used once within an address, otherwise there would be more than one possible resulting address. If an address has more than one contiguous string of all-0 hextets, best practice is to use the double colon (::) on the longest string. If the strings are equal, the first string should use the double colon (::).
+
+
+
+DHCP
+Various types of devices can be DHCP servers as long as they are running DHCP service software. With most medium to large networks, the DHCP server is usually a local dedicated PC-based server
+
+Host -> DHCP Discover Package -> Broadcast
+DHCP Server -> DHCP Offer Package (contains ip addr, default gateway) -> Host
+Host -> DHCP Request Package -> DHCP Server
+DHCP Server -> DHCP ACK -> Host
+
+
+NAT (Network Address Translation)
+Translates private IPv4 address to public IPv4 address which is router's public IPv4 address
+
+
+ARP
+Address Resolution Protocol (ARP) is used to determine the device MAC address of a known destination device IPv4 address. Neighbor Discovery (ND) is used to determine the MAC address of a known destination device IPv6 address.
+broadcast ARP request contains destination IPv4, the host has that IPv4 replies it (ARP reply) by sending their MAC address, and the sender host records the MAC address to their ARP Table
+
+
+Routing Between Networks
+We divide networks because increasing security and maintaining smaller broadcast domains
+To divide a network, we use routers.
+Unlike switches, which make their forwarding decision based on the Layer 2 MAC address, routers make their forwarding decision based on the Layer 3 IP address.
+Routing is a process to determine the best path to a destination.
+The packet format contains the IP addresses of the destination and source hosts, as well as the message data being sent between them. 
+Anytime the network portion of the IP addresses of the source and destination hosts do not match, a router must be used to forward the message. If a host located on network 1.1.1.0 needs to send a message to a host on network 5.5.5.0, the host will forward the message to the router. The router receives the message, de-encapsulates the Ethernet frame, and then reads the destination IP address in the IP packet. It then determines where to forward the message. It re-encapsulates the packet back into a new frame, and forwards the frame on to its destination.
+Router makes its desicions according its router table
+Router drops all broadcast packets.
+
+LAN (Local Area Network)
+a network attached with one administration
+All Hosts on Local Segment is beneficial for small networks and it does not have router because there is just one local segment
+Hosts on a Remote Segment is beneficial for big networks and it has routers to seperate networks
+
+
+TCP and UDP
+TCP and UDP are on Transport layer
+well-known ports: 1-1023 (destination ports associated with common network apps)
+registered ports: 1024-49151 (can be used either source and destination ports, can be used by organizations to register specific apps such as IM apps.)
+private ports: 49152-65535 (often used for source port)
+The source and destination ports are placed within the segment. The segments are then encapsulated within an IP packet. The IP packet contains the IP address of the source and destination. The combination of the source IP address and source port number, or the destination IP address and destination port number is known as a socket.
+
+
+Application Layer Services
+Protocols like HTTP, FTP, SSH etc.
+
+Simple Mail Transfer Protocol (SMTP)
+SMTP is used by an email client to send messages to its local email server. The local server then decides if the message is destined for a local mailbox or if the message is addressed to a mailbox on another server.
+
+Internet Message Access Protocol (IMAP4)
+A server that supports IMAP clients also receives and stores messages addressed to its users. However, unlike POP, IMAP keeps the messages in the mailboxes on the server, unless they are deleted by the user. The most current version of IMAP is IMAP4 which listens for client requests on port 143.
