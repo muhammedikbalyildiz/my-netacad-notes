@@ -1,0 +1,333 @@
+Network Architecture
+Network reliability has 4 aspects: Fault Tolerance, Scability, Quality of Service (QoS) and Security
+A fault tolerant network depends on multiple paths between the source and destination of a message.
+
+A scalable network expands quickly to support new users and applications. It does this without degrading the performance of services that are being accessed by existing users.
+
+QoS becomes a primary mechanism for managing congestion and ensuring reliable delivery of content to all users. For example, one user is requesting a web page, and another is on a phone call. With a QoS policy in place, the router can manage the flow of data and voice traffic, giving priority to voice communications if the network experiences congestion. The focus of QoS is to prioritize time-sensitive traffic. The type of traffic, not the content of the traffic, is what is important.
+
+In order to achieve the goals of network security, there are three primary requirements.
+Confidentiality - Data confidentiality means that only the intended and authorized recipients can access and read data.
+Integrity - Data integrity assures users that the information has not been altered in transmission, from origin to destination.
+Availability - Data availability assures users of timely and reliable access to data services for authorized users.
+
+
+Hierarchical Network Design
+Hierarchical network desgin has 3 layers:
+The access layer provides a connection point for end user devices to the network and allows multiple hosts to connect to other hosts through a network device, usually a switch, such as the Cisco 2960-XR shown in the figure, or a wireless access point. Typically, all devices within a single access layer will have the same network portion of the IP address.
+If a message is destined for a local host, based on the network portion of the IP address, the message remains local. If it is destined for a different network, it is passed up to the distribution layer. Switches provide the connection to the distribution layer devices, usually a Layer 3 device such as a router or Layer 3 switch.
+
+The distribution layer provides a connection point for separate networks and controls the flow of information between the networks. It typically contains more powerful switches, such as the Cisco C9300 series shown in the figure, than the access layer as well as routers for routing between networks. Distribution layer devices control the type and amount of traffic that flows from the access layer to the core layer.
+
+The core layer is a high-speed backbone layer with redundant (backup) connections. It is responsible for transporting large amounts of data between multiple end networks. Core layer devices typically include very powerful, high-speed switches and routers, such as the Cisco Catalyst 9600 shown in the figure. The main goal of the core layer is to transport data quickly.
+
+
+Hypervisors
+The hypervisor is a program, firmware, or hardware that adds an abstraction layer on top of the physical hardware
+Type 1 hypervisors are also called the “bare metal” approach because the hypervisor is installed directly on the hardware. Type 1 hypervisors are usually used on enterprise servers and data center networking devices.
+With Type 1 hypervisors, the hypervisor is installed directly on the server or networking hardware. Then, instances of an OS are installed on the hypervisor, as shown in the figure. Type 1 hypervisors have direct access to the hardware resources; therefore, they are more efficient than hosted architectures. Type 1 hypervisors improve scalability, performance, and robustness.
+
+A Type 2 hypervisor is software that creates and runs VM instances. The computer, on which a hypervisor is supporting one or more VMs, is a host machine.
+
+
+Ethernet Encapsulation
+Physical Layer -> IEEE 802.3
+Data Link -> IEEE 802.02 LAN/MAN protocols, including Ethernet, use the following two separate sublayers of the data link layer to operate. They are the Logical Link Control (LLC) and the Media Access Control (MAC)
+LLC Sublayer - This IEEE 802.2 sublayer communicates between the networking software at the upper layers and the device hardware at the lower layers. It places information in the frame that identifies which network layer protocol is being used for the frame. This information allows multiple Layer 3 protocols, such as IPv4 and IPv6, to use the same network interface and media.
+MAC Sublayer - This sublayer (IEEE 802.3, 802.11, or 802.15 for example) is implemented in hardware and is responsible for data encapsulation and media access control. It provides data link layer addressing and is integrated with various physical layer technologies.
+Ethernet LANs of today use switches that operate in full-duplex. Full-duplex communications with Ethernet switches do not require access control through CSMA/CD.
+
+Switch Forwarding
+If a multicast or broadcast packet comes to the switch, switch forwards the packet to all ports exclude incoming port, but just specified destination hosts accept the packet for the multicast packets
+If a packet forwading to a router, it does not receive if destination mac addr is not its own mac address. But if the packet goes out of the LAN, destination mac addr would be the router's and it receives the packet and forwards it
+
+
+The Network Layer
+IP version 4 (IPv4) and IP version 6 (IPv6) are the principle network layer communication protocols. Other network layer protocols include routing protocols such as Open Shortest Path First (OSPF) and messaging protocols such as Internet Control Message Protocol (ICMP).
+PDU = Protocol Data Unit = data
+The encapsulation process adds IP header information, such as the IP address of the source (sending) and destination (receiving) hosts. The encapsulation process is performed by the source of the IP packet.
+Each router a packet crosses to reach the destination host is called a hop.
+To accomplish end-to-end communications across network boundaries, network layer protocols perform four basic operations: Addressing end devices, Encapsulation, Routing, De-encapsulation
+
+Data -> Segment (Layer 4 encapsulation) -> Packet (Layer 3 encapsulation) -> Frame (Layer 2 encapsulation)
+
+Layer 4 PDU contains segment header and data, Layer 3 PDU contains IP header and data as layer 4 data with segment header
+ 
+There are 3 basic characteristics of IP:
+Connectionless - There is no connection with the destination established before sending data packets.
+Best Effort - IP is inherently unreliable because packet delivery is not guaranteed.
+Media Independent - Operation is independent of the medium (i.e., copper, fiber-optic, or wireless) carrying the data.
+
+There is, however, one major characteristic of the media that the network layer considers: the maximum size of the PDU that each medium can transport. This characteristic is referred to as the maximum transmission unit (MTU). Part of the control communication between the data link layer and the network layer is the establishment of a maximum size for the packet. The data link layer passes the MTU value up to the network layer. The network layer then determines how large packets can be.
+In some cases, an intermediate device, usually a router, must split up an IPv4 packet when forwarding it from one medium to another medium with a smaller MTU. This process is called fragmenting the packet, or fragmentation. Fragmentation causes latency. IPv6 packets cannot be fragmented by the router.
+
+IPv4 Headers
+Significant fields in the IPv4 header include the following:
+    Version - Contains a 4-bit binary value set to 0100 that identifies this as an IPv4 packet.
+    Differentiated Services or DiffServ (DS) - Formerly called the type of service (ToS) field, the DS field is an 8-bit field used to determine the priority of each packet. The six most significant bits of the DiffServ field are the differentiated services code point (DSCP) bits and the last two bits are the explicit congestion notification (ECN) bits.
+    Time to Live (TTL) – TTL contains an 8-bit binary value that is used to limit the lifetime of a packet. The source device of the IPv4 packet sets the initial TTL value. It is decreased by one each time the packet is processed by a router. If the TTL field decrements to zero, the router discards the packet and sends an Internet Control Message Protocol (ICMP) Time Exceeded message to the source IP address. Because the router decrements the TTL of each packet, the router must also recalculate the Header Checksum.
+    Protocol – This field is used to identify the next level protocol. This 8-bit binary value indicates the data payload type that the packet is carrying, which enables the network layer to pass the data to the appropriate upper-layer protocol. Common values include ICMP (1), TCP (6), and UDP (17).
+    Header Checksum – This is used to detect corruption in the IPv4 header.
+    Source IPv4 Address – This contains a 32-bit binary value that represents the source IPv4 address of the packet. The source IPv4 address is always a unicast address.
+    Destination IPv4 Address – This contains a 32-bit binary value that represents the destination IPv4 address of the packet. The destination IPv4 address is a unicast, multicast, or broadcast address.
+A router may have to fragment an IPv4 packet when forwarding it from one medium to another with a smaller MTU.
+The Options and Padding fields are rarely used and are beyond the scope of this module.
+
+Limitations of IPv4
+    IPv4 address depletion - IPv4 has a limited number of unique public addresses available. Although there are approximately 4 billion IPv4 addresses, the increasing number of new IP-enabled devices, always-on connections, and the potential growth of less-developed regions have increased the need for more addresses.
+    Lack of end-to-end connectivity - Network Address Translation (NAT) is a technology commonly implemented within IPv4 networks. NAT provides a way for multiple devices to share a single public IPv4 address. However, because the public IPv4 address is shared, the IPv4 address of an internal network host is hidden. This can be problematic for technologies that require end-to-end connectivity.
+    Increased network complexity – While NAT has extended the lifespan of IPv4 it was only meant as a transition mechanism to IPv6. NAT in its various implementation creates additional complexity in the network, creating latency and making troubleshooting more difficult.
+
+IPv6
+Improvements that IPv6 provides include the following:
+    Increased address space - IPv6 addresses are based on 128-bit hierarchical addressing as opposed to IPv4 with 32 bits.
+    Improved packet handling - The IPv6 header has been simplified with fewer fields.
+    Eliminates the need for NAT - With such a large number of public IPv6 addresses, NAT between a private IPv4 address and a public IPv4 is not needed. This avoids some of the NAT-induced problems experienced by applications that require end-to-end connectivity.
+
+The fields in the IPv6 packet header include the following:
+    Version - This field contains a 4-bit binary value set to 0110 that identifies this as an IP version 6 packet.
+    Traffic Class - This 8-bit field is equivalent to the IPv4 Differentiated Services (DS) field.
+    Flow Label - This 20-bit field suggests that all packets with the same flow label receive the same type of handling by routers.
+    Payload Length - This 16-bit field indicates the length of the data portion or payload of the IPv6 packet. This does not include the length of the IPv6 header, which is a fixed 40-byte header.
+    Next Header - This 8-bit field is equivalent to the IPv4 Protocol field. It indicates the data payload type that the packet is carrying, enabling the network layer to pass the data to the appropriate upper-layer protocol.
+    Hop Limit - This 8-bit field replaces the IPv4 TTL field. This value is decremented by a value of 1 by each router that forwards the packet. When the counter reaches 0, the packet is discarded, and an ICMPv6 Time Exceeded message is forwarded to the sending host,. This indicates that the packet did not reach its destination because the hop limit was exceeded. Unlike IPv4, IPv6 does not include an IPv6 Header Checksum, because this function is performed at both the lower and upper layers. This means the checksum does not need to be recalculated by each router when it decrements the Hop Limit field, which also improves network performance.
+    Source IPv6 Address - This 128-bit field identifies the IPv6 address of the sending host.
+    Destination IPv6 Address - This 128-bit field identifies the IPv6 address of the receiving host.
+An IPv6 packet may also contain extension headers (EH), which provide optional network layer information. Extension headers are optional and are placed between the IPv6 header and the payload. EHs are used for fragmentation, security, to support mobility and more.
+Unlike IPv4, routers do not fragment routed IPv6 packets.
+
+
+ARP
+    If the packet’s destination IPv4 address is on the same network as the source IPv4 address, the device will search the ARP table for the destination IPv4 address.
+    If the destination IPv4 address is on a different network than the source IPv4 address, the device will search the ARP table for the IPv4 address of the default gateway.
+
+The ARP reply is encapsulated in an Ethernet frame using the following header information:
+    Destination MAC address – This is the MAC address of the sender of the ARP request.
+    Source MAC address – This is the MAC address of the sender of the ARP reply.
+    Type - ARP messages have a type field of 0x806. This informs the receiving NIC that the data portion of the frame needs to be passed to the ARP process.
+Note: IPv6 uses a similar process to ARP for IPv4, known as ICMPv6 Neighbor Discovery (ND). IPv6 uses neighbor solicitation and neighbor advertisement messages, similar to IPv4 ARP requests and ARP replies.
+
+On a Cisco router, the "show ip arp" command is used to display the ARP table, as shown in the figure.
+
+
+DNS Services
+FQDN (fully-qualified domain name) is basically a domain name like https://www.cisco.com
+
+
+DHCP Services
+DHCP for IPv6 (DHCPv6) provides similar services for IPv6 clients. One important difference is that DHCPv6 does not provide a default gateway address. This can only be obtained dynamically from the Router Advertisement message of the router.
+Assuming that the IPv4 address requested by the client, or offered by the server, is still available, the server returns a DHCP acknowledgment (DHCPACK) message that acknowledges to the client that the lease has been finalized. If the offer is no longer valid, then the selected server responds with a DHCP negative acknowledgment (DHCPNAK) message. If a DHCPNAK message is returned, then the selection process must begin again with a new DHCPDISCOVER message being transmitted. After the client has the lease, it must be renewed prior to the lease expiration through another DHCPREQUEST message.
+DHCPv6 has a set of messages that is similar to those for DHCPv4. The DHCPv6 messages are SOLICIT, ADVERTISE, INFORMATION REQUEST, and REPLY.
+
+
+Transport Layer
+The transport layer has no knowledge of the destination host type, the type of media over which the data must travel, the path taken by the data, the congestion on a link, or the size of the network.
+
+
+Transport Layer Responsibilities
+
+Tracking Individual Conversations
+At the transport layer, each set of data flowing between a source application and a destination application is known as a conversation and is tracked separately. It is the responsibility of the transport layer to maintain and track these multiple conversations.
+As illustrated in the figure, a host may have multiple applications that are communicating across the network simultaneously.
+Most networks have a limitation on the amount of data that can be included in a single packet. Therefore, data must be divided into manageable pieces.
+
+Segmenting Data and Reassembling Segments
+It is the transport layer responsibility to divide the application data into appropriately sized blocks. Depending on the transport layer protocol used, the transport layer blocks are called either segments (for TCP) or datagrams (for UDP). The figure illustrates the transport layer using different blocks for each conversation.
+The transport layer divides the data into smaller blocks (i.e., segments or datagrams) that are easier to manage and transport.
+
+Add Header Information
+The transport layer protocol also adds header information containing binary data organized into several fields to each block of data. It is the values in these fields that enable various transport layer protocols to perform different functions in managing data communication.
+For instance, the header information is used by the receiving host to reassemble the blocks of data into a complete data stream for the receiving application layer program.
+The transport layer ensures that even with multiple application running on a device, all applications receive the correct data.
+
+Identifying the Applications
+The transport layer must be able to separate and manage multiple communications with different transport requirement needs. To pass data streams to the proper applications, the transport layer identifies the target application using an identifier called a port number. As illustrated in the figure, each software process that needs to access the network is assigned a port number unique to that host.
+
+Conversation Multiplexing
+Sending some types of data (e.g., a streaming video) across a network, as one complete communication stream, can consume all the available bandwidth. This would prevent other communication conversations from occurring at the same time. It would also make error recovery and retransmission of damaged data difficult.
+As shown in the figure, the transport layer uses segmentation and multiplexing to enable different communication conversations to be interleaved on the same network.
+Error checking can be performed on the data in the segment, to determine if the segment was altered during transmission.
+
+
+TCP
+TCP provides reliability and flow control using these basic operations:
+    Number and track data segments transmitted to a specific host from a specific application
+    Acknowledge received data
+    Retransmit any unacknowledged data after a certain amount of time
+    Sequence data that might arrive in wrong order
+    Send data at an efficient rate that is acceptable by the receiver
+    
+In addition to supporting the basic functions of data segmentation and reassembly, TCP also provides the following services:
+    Establishes a Session - TCP is a connection-oriented protocol that negotiates and establishes a permanent connection (or session) between source and destination devices prior to forwarding any traffic. Through session establishment, the devices negotiate the amount of traffic that can be forwarded at a given time, and the communication data between the two can be closely managed.
+    Ensures Reliable Delivery - For many reasons, it is possible for a segment to become corrupted or lost completely, as it is transmitted over the network. TCP ensures that each segment that is sent by the source arrives at the destination.
+    Provides Same-Order Delivery - Because networks may provide multiple routes that can have different transmission rates, data can arrive in the wrong order. By numbering and sequencing the segments, TCP ensures segments are reassembled into the proper order.
+    Supports Flow Control - Network hosts have limited resources (i.e., memory and processing power). When TCP is aware that these resources are overtaxed, it can request that the sending application reduce the rate of data flow. This is done by TCP regulating the amount of data the source transmits. Flow control can prevent the need for retransmission of the data when the resources of the receiving host are overwhelmed.
+    
+TCP provides connection with 3-way-handshake -> SYN - SYN/ACK - ACK
+TCP terminates the session with FIN - ACK - FIN - ACK
+TCP is a full-duplex protocol, where each connection represents two one-way communication sessions. 
+
+The six bits in the Control Bits field of the TCP segment header are also known as flags. A flag is a bit that is set to either on or off.
+The six control bits flags are as follows:
+    URG - Urgent pointer field significant
+    ACK - Acknowledgment flag used in connection establishment and session termination
+    PSH - Push function
+    RST - Reset the connection when an error or timeout occurs
+    SYN - Synchronize sequence numbers used in connection establishment
+    FIN - No more data from sender and used in session termination
+
+TCP Reliability
+Sequence numbers are assigned in the header of each packet to achieve this goal. The sequence number represents the first data byte of the TCP segment.
+During session setup, an initial sequence number (ISN) is set. This ISN represents the starting value of the bytes that are transmitted to the receiving application. As data is transmitted during the session, the sequence number is incremented by the number of bytes that have been transmitted. This data byte tracking enables each segment to be uniquely identified and acknowledged. Missing segments can then be identified.
+
+TCP Flow Control
+Windows size and Maximum Segment Size on the header provide flow control
+
+TCP Congestion of the Connection
+When network congestion has resulted in the source learning of the loss of TCP segments that were sent to the destination, The source decreases the amount of data that it transmits before it receives an acknowledgement from the destination.
+
+
+UDP
+Note: UDP divides data into datagrams that are also referred to as segments.
+
+UDP features include the following:
+    Data is reconstructed in the order that it is received.
+    Any segments that are lost are not resent.
+    There is no session establishment.
+    The sending is not informed about resource availability.
+
+UDP header contains source port, destinations port, lenght and checksum
+
+Although DNS and SNMP use UDP by default, both can also use TCP. DNS will use TCP if the DNS request or DNS response is more than 512 bytes, such as when a DNS response includes many name resolutions. Similarly, under some situations the network administrator may want to configure SNMP to use TCP.
+
+
+The Cisco IOS Command Line Interface
+Cisco IOS CLI has 3 command modes:
+User EXEC: Has restricted privileges, often referred to as "view-only" mode. Prompt shown as >, for example Switch>, Router>
+Privileged EXEC: Like a root or administrator mode. Prompt shown as #, for example Switch#, Router#
+Global Config: It is reachable from Privileged EXEC Mode by typing configure terminal command, there are also sub-configuration modes. Prompt shown as (config)#, for example Switch(config)#, Router(config)#
+
+Navigate Between IOS Modes
+enable -> passes Privileged EXEC Mode
+disable -> goes back to User EXEC Mode
+configure terminal (config t as short) -> passes Global Config Mode
+exit -> if typed in Global Config Mode, goes back to Privileged EXEC mode, if typed in Privileged EXEC Mode, goes back to User EXEC Mode, so it used for returning one lower command mode
+line console 0 -> passes config-line sub-config mode.
+line vty 0 15 -> passes Virtual Terminal Management interface, these are used for remotee administrative access
+interface vlan 0 -> passes interface sub-config mode
+interface fastethernet 0/1 -> interface sub-config mode used for passing between interfaces.
+end (or CTRL+Z) -> borught back to Privileged EXEC Mode from any config mode.
+
+Contex Sensitive Help Command
+? command is context sensitive, which means it shows you the commands you can use in the current command mode, also you can use it to complete a command
+input:in?
+output: interface
+input ping ?
+output would show the keywords or parameters of the ping command
+
+
+Basic Switch Configuration
+Initial Switch Configuration Tasks
+
+Note: [] means the user space, so it can be anything, for example hostname [name] means [name] could be anything like a variable. And ; represents passing the line down.
+
+Configure the device name: hostname [name]
+Secure user EXEC mode: line console 0 ; password [password] ; login
+Secure remote Telnet/SSH Access: line vty 0 15 ; password [password] ; login
+Secaure privileged EXEC mode: enable secret [password]
+Secute all passwords in the config file: service password-encryption
+Provide legal notification: banner motd [delimeter] [message] [delimeter]
+Configure the management SVI (Switch Virtual Interface): interface vlan 1 ; ip address [ip address] [subnet mask] ; no shutdown
+Save the configuration: copy running-config startup-config
+
+Configure a Switch Virtual Interface
+Note: Similar to Windows hosts, switches configured with an IPv4 address will typically also need to have a default gateway assigned. This can be done using the ip default-gateway [ip address] global configuration command. The ip-address parameter would be the IPv4 address of the local router on the network, as shown in the example.
+Sw-Floor-1# configure terminal
+Sw-Floor-1(config)# interface vlan 1
+Sw-Floor-1(config-if)# ip address 192.168.1.20 255.255.255.0
+Sw-Floor-1(config-if)# no shutdown
+Sw-Floor-1(config-if)# exit
+Sw-Floor-1(config)# ip default-gateway 192.168.1.1
+
+
+Basic Router Configuration Example
+R1(config)# enable secret class
+R1(config)#
+R1(config)# line console 0
+R1(config-line)# password cisco
+R1(config-line)# login
+R1(config-line)# exit
+R1(config)#
+R1(config)# line vty 0 4
+R1(config-line)# password cisco
+R1(config-line)# login
+R1(config-line)# transport input ssh telnet
+R1(config-line)# exit
+R1(config)#
+R1(config)# service password-encryption
+R1(config)#
+
+Enable SSH
+Step 1. Verify SSH support.
+Use the show ip ssh command to verify that the switch supports SSH. If the switch is not running an IOS that supports cryptographic features, this command is unrecognized.
+
+Step 2. Configure the IP domain.
+Configure the IP domain name of the network using the ip domain-name domain-name global configuration mode command. In the example configuration below, the domain-name value is cisco.com.
+
+Step 3. Generate RSA key pairs.
+Not all versions of the IOS default to SSH version 2, and SSH version 1 has known security flaws. To configure SSH version 2, issue the ip ssh version 2 global configuration mode command. Generating an RSA key pair automatically enables SSH. Use the crypto key generate rsa global configuration mode command to enable the SSH server on the switch and generate an RSA key pair. When generating RSA keys, the administrator is prompted to enter a modulus length. The sample configuration in the figure uses a modulus size of 1,024 bits. A longer modulus length is more secure, but it takes more time to generate and to use.
+Note: To delete the RSA key pair, use the crypto key zeroize rsa global configuration mode command. After the RSA key pair is deleted, the SSH server is automatically disabled.
+
+Step 4. Configure user authentication.
+The SSH server can authenticate users locally or use an authentication server. To use the local authentication method, create a username and password pair with the username username secret password global configuration mode command. In the example, the user admin is assigned the password ccna.
+
+Step 5. Configure the vty lines.
+Enable the SSH protocol on the vty lines using the transport input ssh line configuration mode command. The Catalyst 2960 has vty lines ranging from 0 to 15. This configuration prevents non-SSH (such as Telnet) connections and limits the switch to accept only SSH connections. Use the line vty global configuration mode command and then the login local line configuration mode command to require local authentication for SSH connections from the local username database.
+
+Step 6. Enable SSH version 2.
+By default, SSH supports both versions 1 and 2. When supporting both versions, this is shown in the show ip ssh output as supporting version 1.99. Version 1 has known vulnerabilities. For this reason, it is recommended to enable only version 2. Enable SSH version using the ip ssh version 2 global configuration command.
+
+ICMP Messages
+Some of the Destination Unreachable codes for ICMPv4 are as follows:
+
+    0 - Net unreachable
+    1 - Host unreachable
+    2 - Protocol unreachable
+    3 - Port unreachable
+
+Some of the Destination Unreachable codes for ICMPv6 are as follows:
+    0 - No route to destination
+    1 - Communication with the destination is administratively prohibited (e.g., firewall)
+    2 – Beyond scope of the source address
+    3 - Address unreachable
+    4 - Port unreachable
+
+ICMPv6
+ICMPv6 includes four new protocols as part of the Neighbor Discovery Protocol (ND or NDP).
+Messaging between an IPv6 router and an IPv6 device, including dynamic address allocation are as follows:
+    Router Solicitation (RS) message
+    Router Advertisement (RA) message
+
+Messaging between IPv6 devices, including duplicate address detection and address resolution are as follows:
+    Neighbor Solicitation (NS) message
+    Neighbor Advertisement (NA) message
+Note: ICMPv6 ND also includes the redirect message, which has a similar function to the redirect message used in ICMPv4.
+
+R1 sends an RA message, "Hi all IPv6-enabled devices. I’m R1 and you can use SLAAC (Stateless Address Autoconfiguration) to create an IPv6 global unicast address. The prefix is 2001:db8:acad:1::/64. By the way, use my link-local address fe80::1 as your default gateway."
+
+PC1 sends an RS message, "Hi, I just booted up. Is there an IPv6 router on the network? I need to know how to get my IPv6 address information dynamically."
+R1 replies with an RA message. "Hi all IPv6-enabled devices. I’m R1 and you can use SLAAC to create an IPv6 global unicast address. The prefix is 2001:db8:acad:1::/64. By the way, use my link-local address fe80::1 as your default gateway."
+
+When a device is assigned a global IPv6 unicast or link-local unicast address, it may perform duplicate address detection (DAD) to ensure that the IPv6 address is unique. To check the uniqueness of an address, the device will send an NS message with its own IPv6 address as the targeted IPv6 address, as shown in the figure.
+If another device on the network has this address, it will respond with an NA message. This NA message will notify the sending device that the address is in use. If a corresponding NA message is not returned within a certain amount of time, the unicast address is unique and acceptable for use.
+Note: DAD is not required, but RFC 4861 recommends that DAD is performed on unicast addresses.
+PC1 sends an NS message to check the uniqueness of an address,"Will whoever has the IPv6 address 2001:db8:acad:1::10, send me your MAC address?"
+
+Address resolution is used when a device on the LAN knows the IPv6 unicast address of a destination but does not know its Ethernet MAC address. To determine the MAC address for the destination, the device will send an NS message to the solicited node address. The message will include the known (targeted) IPv6 address. The device that has the targeted IPv6 address will respond with an NA message containing its Ethernet MAC address.
+In the figure, R1 sends a NS message to 2001:db8:acad:1::10 asking for its MAC address.
+    R1 sends an address resolution NS message. "Will whoever has the IPv6 address 2001:db8:acad:1::10, send me your MAC address?"
+    PC1 replies with an NA message. "I’m 2001:db8:acad:1::10 and my MAC address is 00:aa:bb:cc:dd:ee."
+
+
+Traceroute
+Round Trip Time (RTT) used to locate a problematicrouter in the path and indicates if a hop fails to respond
